@@ -3,6 +3,7 @@ import { fetchStrandById } from "@/lib/actions/strand.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import Comment from "@/components/forms/Comment";
 
 const Page = async ({ params }: { params: { id: string } }) => {
   if (!params.id) return null;
@@ -17,7 +18,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
   return (
     <section className="relative">
-      <div className="">
+      <div>
         <StrandCard
           key={strand._id}
           id={strand._id}
@@ -29,6 +30,31 @@ const Page = async ({ params }: { params: { id: string } }) => {
           createdAt={strand.createdAt}
           comments={strand.children}
         />
+      </div>
+
+      <div className="mt-7">
+        <Comment
+          strandId={strand.id}
+          currentUserImg={userInfo.image}
+          currentUserId={JSON.stringify(userInfo._id)}
+        />
+      </div>
+
+      <div className="mt-10">
+        {strand.children.map((childItem: any) => (
+          <StrandCard
+            key={childItem._id}
+            id={childItem._id}
+            currentUserId={childItem?.id || ""}
+            parentId={childItem.parentId}
+            content={childItem.text}
+            author={childItem.author}
+            community={childItem.community}
+            createdAt={childItem.createdAt}
+            comments={childItem.children}
+            isComment
+          />
+        ))}
       </div>
     </section>
   );

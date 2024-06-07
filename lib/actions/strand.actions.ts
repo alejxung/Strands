@@ -101,3 +101,41 @@ export async function fetchStrandById(id: string) {
     throw new Error(`Error fetching strand: ${error.message}`);
   }
 }
+
+export async function addCommentToStrand(
+  strandId: string,
+  commentText: string,
+  userId: string,
+  path: string
+) {
+  connectToDB();
+
+  try {
+    // Find the original strand by its ID
+    const originalStrand = await Strand.findById(strandId);
+
+    if (!originalStrand) {
+      throw new Error("Strand not found");
+    }
+
+    // Create a new strand with the comment text
+    const commentStrand = new Strand({
+      text: commentText,
+      author: userId,
+      parentId: strandId,
+    });
+
+    // Save the new strand
+    const savedCommentStrand = await commentStrand.save();
+
+    // Update the original strand to include the new comment
+    originalStrand.children.push(savedCommentStrand._id);
+
+    // Save the original strand
+    await originalStrand.save();
+
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Error adding comment to strand: ${error.message}`);
+  }
+}
