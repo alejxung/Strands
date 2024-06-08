@@ -1,6 +1,19 @@
 # Strands
 
-Threads Clone, A Full Stack MERN App
+Strands is a full-stack application modeled after Threads, built using the MERN stack (MongoDB, Express, React, Node.js). The project is designed to replicate the core functionalities of Threads, leveraging modern web development technologies and frameworks.
+
+### Key Features:
+
+1. Full-Stack MERN Application: Utilizes MongoDB for database management, Express for server-side operations, React for the frontend, and Node.js for the backend.
+2. Next.js Integration: Built with Next.js to enhance performance and provide server-side rendering. The project is bootstrapped using create-next-app.
+3. Tailwind CSS: Styled using Tailwind CSS for efficient and responsive design.
+4. Vercel Deployment: The application is deployed on Vercel, providing easy scalability and seamless deployment processes.
+
+### Screenshots:
+
+![alt text](public/screenshots/Screenshot1.png)
+![alt text](public/screenshots/Screenshot2.png)
+![alt text](public/screenshots/Screenshot3.png)
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
