@@ -1,11 +1,15 @@
-import StrandCard from "@/components/cards/StrandCard";
-import { fetchStrandById } from "@/lib/actions/strand.actions";
-import { fetchUser } from "@/lib/actions/user.actions";
-import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import Comment from "@/components/forms/Comment";
+import { currentUser } from "@clerk/nextjs/server";
 
-const Page = async ({ params }: { params: { id: string } }) => {
+import Comment from "@/components/forms/Comment";
+import StrandCard from "@/components/cards/StrandCard";
+
+import { fetchUser } from "@/lib/actions/user.actions";
+import { fetchStrandById } from "@/lib/actions/strand.actions";
+
+export const revalidate = 0;
+
+async function page({ params }: { params: { id: string } }) {
   if (!params.id) return null;
 
   const user = await currentUser();
@@ -20,9 +24,8 @@ const Page = async ({ params }: { params: { id: string } }) => {
     <section className="relative">
       <div>
         <StrandCard
-          key={strand._id}
           id={strand._id}
-          currentUserId={user?.id || ""}
+          currentUserId={user.id}
           parentId={strand.parentId}
           content={strand.text}
           author={strand.author}
@@ -34,8 +37,8 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
       <div className="mt-7">
         <Comment
-          strandId={strand.id}
-          currentUserImg={userInfo.image}
+          strandId={params.id}
+          currentUserImg={user.imageUrl}
           currentUserId={JSON.stringify(userInfo._id)}
         />
       </div>
@@ -45,7 +48,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
           <StrandCard
             key={childItem._id}
             id={childItem._id}
-            currentUserId={childItem?.id || ""}
+            currentUserId={user.id}
             parentId={childItem.parentId}
             content={childItem.text}
             author={childItem.author}
@@ -58,6 +61,6 @@ const Page = async ({ params }: { params: { id: string } }) => {
       </div>
     </section>
   );
-};
+}
 
-export default Page;
+export default page;

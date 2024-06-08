@@ -1,6 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { z } from "zod";
+import Image from "next/image";
+import { useForm } from "react-hook-form";
+import { usePathname } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   Form,
   FormControl,
@@ -8,17 +13,12 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { usePathname, useRouter } from "next/navigation";
-import Image from "next/image";
 
-// import { updateUser } from "@/lib/actions/user.actions";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+
 import { CommentValidation } from "@/lib/validations/strand";
 import { addCommentToStrand } from "@/lib/actions/strand.actions";
-// import { createStrand } from "@/lib/actions/strand.actions";
 
 interface Props {
   strandId: string;
@@ -26,11 +26,10 @@ interface Props {
   currentUserId: string;
 }
 
-const Comment = ({ strandId, currentUserImg, currentUserId }: Props) => {
-  const router = useRouter();
+function Comment({ strandId, currentUserImg, currentUserId }: Props) {
   const pathname = usePathname();
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof CommentValidation>>({
     resolver: zodResolver(CommentValidation),
     defaultValues: {
       strand: "",
@@ -55,11 +54,11 @@ const Comment = ({ strandId, currentUserImg, currentUserId }: Props) => {
           control={form.control}
           name="strand"
           render={({ field }) => (
-            <FormItem className="flex w-full gap-3 items-center">
+            <FormItem className="flex w-full items-center gap-3">
               <FormLabel>
                 <Image
                   src={currentUserImg}
-                  alt="Profile image"
+                  alt="current_user"
                   width={48}
                   height={48}
                   className="rounded-full object-cover"
@@ -68,9 +67,9 @@ const Comment = ({ strandId, currentUserImg, currentUserId }: Props) => {
               <FormControl className="border-none bg-transparent">
                 <Input
                   type="text"
+                  {...field}
                   placeholder="Comment..."
                   className="no-focus text-light-1 outline-none"
-                  {...field}
                 />
               </FormControl>
             </FormItem>
@@ -83,6 +82,6 @@ const Comment = ({ strandId, currentUserImg, currentUserId }: Props) => {
       </form>
     </Form>
   );
-};
+}
 
 export default Comment;
